@@ -5,39 +5,36 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { fetchTodos, saveTodos } from './fetchTodos';
+import { useQuery } from '@tanstack/react-query';
+import todosServiceFactory from './todosFactory';
 
-import type { TodosContextType, TodoSourceType, TodoType } from '../types/main';
+import type { TodosContext, TodoDataSource, Todo } from '../types/main';
 import type { ReactNode } from 'react';
 
-const dataSourceType: TodoSourceType = 'local-storage';
-const TodosContext = createContext<TodosContextType | undefined>(undefined);
+const dataSourceType: TodoDataSource = 'local-storage';
+const TodosContext = createContext<TodosContext | undefined>(undefined);
+const todosService = todosServiceFactory(dataSourceType);
 
 const TodosProvider = ({ children }: { children: ReactNode }) => {
-  const [allTodos, setAllTodos] = useState<TodoType[]>([]);
+  const [allTodos, setAllTodos] = useState<Todo[]>([]);
+  const { data: todos } = useQuery({
+    queryKey: ['todos'],
+    queryFn: todosService.getAll,
+  });
 
   useEffect(() => {
-    const initializeTodos = async () => {
-      try {
-        const initialTodos = await fetchTodos(dataSourceType);
-        setAllTodos(initialTodos);
-      } catch (error) {
-        console.error('Failed to initialize todos:', error);
-      }
-    };
-
-    initializeTodos();
-  }, []);
+    setAllTodos(todos ?? []);
+  }, [todos]);
 
   const createTodo = useCallback((todoName: string) => {
     setAllTodos((prevTodos) => {
-      const newTodo: TodoType = {
+      const newTodo: Todo = {
         id: new Date().getTime(),
         text: todoName,
         isDone: false,
       };
       const updatedTodos = [...prevTodos, newTodo];
-      saveTodos(updatedTodos, dataSourceType);
+      todosService.saveTodos(updatedTodos);
       return updatedTodos;
     });
   }, []);
@@ -50,7 +47,7 @@ const TodosProvider = ({ children }: { children: ReactNode }) => {
         }
         return item;
       });
-      saveTodos(updatedTodos, dataSourceType);
+      todosService.saveTodos(updatedTodos);
       return updatedTodos;
     });
   }, []);
@@ -58,7 +55,7 @@ const TodosProvider = ({ children }: { children: ReactNode }) => {
   const deleteTodo = useCallback((id: number) => {
     setAllTodos((prevTodos) => {
       const updatedTodos = prevTodos.filter((item) => item.id !== id);
-      saveTodos(updatedTodos, dataSourceType);
+      todosService.saveTodos(updatedTodos);
       return updatedTodos;
     });
   }, []);
@@ -71,7 +68,7 @@ const TodosProvider = ({ children }: { children: ReactNode }) => {
         }
         return item;
       });
-      saveTodos(updatedTodos, dataSourceType);
+      todosService.saveTodos(updatedTodos);
       return updatedTodos;
     });
   }, []);

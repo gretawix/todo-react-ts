@@ -1,21 +1,26 @@
 import { memo } from 'react';
-import { useTodos } from '../context/todos';
+import { useTodos } from '../contexts/todos';
 
 const NewTodo = () => {
   const { createTodo } = useTodos();
+  const todoName = 'new-todo';
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = new FormData(e.currentTarget);
-    const newTodo = form.get('new-todo')?.toString();
-    createTodo(newTodo ?? '');
-    e.currentTarget.reset();
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const newTodo = form.get(todoName)?.toString();
+    if (newTodo) {
+      createTodo(newTodo);
+    } else {
+      alert('Todo text must not be empty');
+    }
+    event.currentTarget.reset();
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <label htmlFor="todo">New todo</label>
-      <input type="text" id="new-todo" name="new-todo"></input>
+      <input type="text" id={todoName} name={todoName}></input>
       <button type="submit">Add new task</button>
     </form>
   );

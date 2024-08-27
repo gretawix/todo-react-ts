@@ -1,8 +1,8 @@
 import { memo, useState } from 'react';
-import type { TodoType } from '../types/main';
+import type { Todo } from '../types/main';
 
 type TodoProps = {
-  todo: TodoType;
+  todo: Todo;
   onDelete: (id: number) => void;
   onToggle: (id: number) => void;
   onEdit: (id: number, newText: string) => void;
@@ -12,11 +12,11 @@ function Todo({ todo, onDelete, onToggle, onEdit }: TodoProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [newText, setNewText] = useState(todo.text);
 
-  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setNewText(e.target.value);
+  const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setNewText(event.target.value);
 
-  const handleSave = (e: React.FormEvent<HTMLFormElement>, id: number) => {
-    e.preventDefault();
+  const handleSave = (event: React.FormEvent<HTMLFormElement>, id: number) => {
+    event.preventDefault();
     setIsEditing(false);
     onEdit(id, newText);
   };
@@ -29,7 +29,7 @@ function Todo({ todo, onDelete, onToggle, onEdit }: TodoProps) {
     <li style={{ textAlign: 'left', listStyle: 'none' }}>
       {isEditing ? (
         <>
-          <form onSubmit={(e) => handleSave(e, todo.id)}>
+          <form onSubmit={(event) => handleSave(event, todo.id)}>
             <label htmlFor={todo.id.toString()}></label>
             <input
               type="text"
