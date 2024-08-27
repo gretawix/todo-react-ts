@@ -29,59 +29,52 @@ const TodosProvider = ({ children }: { children: ReactNode }) => {
     initializeTodos();
   }, []);
 
-  const createTodo = useCallback(
-    (todoName: string) => {
+  const createTodo = useCallback((todoName: string) => {
+    setAllTodos((prevTodos) => {
       const newTodo: TodoType = {
         id: new Date().getTime(),
         text: todoName,
         isDone: false,
       };
+      const updatedTodos = [...prevTodos, newTodo];
+      saveTodos(updatedTodos, dataSourceType);
+      return updatedTodos;
+    });
+  }, []);
 
-      setAllTodos([...allTodos, newTodo]);
-      saveTodos([...allTodos, newTodo], dataSourceType);
-    },
-    [allTodos]
-  );
-
-  const markAsDone = useCallback(
-    (id: number) => {
-      const updatedTodos = [...allTodos].map((item) => {
+  const markAsDone = useCallback((id: number) => {
+    setAllTodos((prevTodos) => {
+      const updatedTodos = prevTodos.map((item) => {
         if (item.id === id) {
           return { ...item, isDone: !item.isDone };
         }
         return item;
       });
-
-      setAllTodos(updatedTodos);
       saveTodos(updatedTodos, dataSourceType);
-    },
-    [allTodos]
-  );
+      return updatedTodos;
+    });
+  }, []);
 
-  const deleteTodo = useCallback(
-    (id: number) => {
-      const updatedTodos = [...allTodos].filter((item) => item.id !== id);
-
-      setAllTodos(updatedTodos);
+  const deleteTodo = useCallback((id: number) => {
+    setAllTodos((prevTodos) => {
+      const updatedTodos = prevTodos.filter((item) => item.id !== id);
       saveTodos(updatedTodos, dataSourceType);
-    },
-    [allTodos]
-  );
+      return updatedTodos;
+    });
+  }, []);
 
-  const editTodo = useCallback(
-    (id: number, newText: string) => {
-      const updatedTodos = [...allTodos].map((item) => {
+  const editTodo = useCallback((id: number, newText: string) => {
+    setAllTodos((prevTodos) => {
+      const updatedTodos = prevTodos.map((item) => {
         if (item.id === id) {
           return { ...item, text: newText };
         }
         return item;
       });
-
-      setAllTodos(updatedTodos);
       saveTodos(updatedTodos, dataSourceType);
-    },
-    [allTodos]
-  );
+      return updatedTodos;
+    });
+  }, []);
 
   const value = { allTodos, createTodo, markAsDone, deleteTodo, editTodo };
   return (

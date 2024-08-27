@@ -1,5 +1,6 @@
 import type { TodoSourceType, TodoType } from '../types/main';
 
+const todosKey = 'todos';
 const initialTodos: TodoType[] = [
   {
     id: 0,
@@ -14,11 +15,15 @@ const initialTodos: TodoType[] = [
 ];
 
 const fetchFromServer = async (): Promise<TodoType[]> => {
-  return [initialTodos[1]];
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve([initialTodos[1]]);
+    }, 1000);
+  });
 };
 
 const fetchFromLocalStorage = () => {
-  const localData = localStorage.getItem('todos');
+  const localData = localStorage.getItem(todosKey);
   if (localData) {
     return JSON.parse(localData) as TodoType[];
   } else {
@@ -37,7 +42,7 @@ const fetchTodos = async (source: TodoSourceType): Promise<TodoType[]> => {
 };
 
 const saveToLocalStorage = (todos: TodoType[]) => {
-  localStorage.setItem('todos', JSON.stringify(todos));
+  localStorage.setItem(todosKey, JSON.stringify(todos));
 };
 
 const saveToServer = (todos: TodoType[]) => {
