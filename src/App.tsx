@@ -1,12 +1,14 @@
-import Todos from './components/Todos';
-import TodosProvider from './context/TodosProvider';
+import NewTodo from './components/NewTodo';
+import TodosList from './components/TodosList';
+import { TodosProvider } from './context/todos';
 
 function App() {
   return (
     <div className="App">
       <h1>Todo app</h1>
       <TodosProvider>
-        <Todos />
+        <NewTodo />
+        <TodosList />
       </TodosProvider>
     </div>
   );

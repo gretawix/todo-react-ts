@@ -6,5 +6,10 @@ export type TodoType = {
 
 export type TodosContextType = {
   allTodos: TodoType[];
-  setAllTodos: React.Dispatch<React.SetStateAction<TodoType[]>>;
+  createTodo: (todoName: string) => void;
+  markAsDone: (id: number) => void;
+  deleteTodo: (id: number) => void;
+  editTodo: (id: number, newText: string) => void;
 };
+
+export type TodoSourceType = 'local-storage' | 'server';
