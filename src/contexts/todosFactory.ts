@@ -38,7 +38,7 @@ class TodosServerService implements TodosService {
   }
 }
 
-const todosServiceFactory = (source: TodoDataSource): TodosService => {
+export const todosServiceFactory = (source: TodoDataSource): TodosService => {
   if (source === 'local-storage') {
     return new TodosLocalStorageService();
   } else if (source === 'server') {
@@ -47,5 +47,3 @@ const todosServiceFactory = (source: TodoDataSource): TodosService => {
     throw new Error(`Unsupported source: ${source}`);
   }
 };
-
-export default todosServiceFactory;

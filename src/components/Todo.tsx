@@ -8,7 +8,7 @@ type TodoProps = {
   onEdit: (id: number, newText: string) => void;
 };
 
-function Todo({ todo, onDelete, onToggle, onEdit }: TodoProps) {
+const Todo = ({ todo, onDelete, onToggle, onEdit }: TodoProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [newText, setNewText] = useState(todo.text);
 
@@ -65,6 +65,6 @@ function Todo({ todo, onDelete, onToggle, onEdit }: TodoProps) {
       )}
     </li>
   );
-}
+};
 
 export default memo(Todo);

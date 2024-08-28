@@ -1,11 +1,10 @@
 import NewTodo from './components/NewTodo';
 import TodosList from './components/TodosList';
 import { TodosProvider } from './contexts/todos';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from './queryClient';
 
-function App() {
-  const queryClient = new QueryClient();
-
+const App = () => {
   return (
     <div className="App">
       <h1>Todo app</h1>
@@ -17,6 +16,6 @@ function App() {
       </QueryClientProvider>
     </div>
   );
-}
+};
 
 export default App;
